@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Искусство гостиничного сервиса — игра</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;700;900&display=swap&subset=cyrillic" rel="stylesheet">
+<style>
+:root{--ink:#1F1B16;--cream:#FFF7E8;--main:#E4572E;--light:#FF9B7A;--on:#fff}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%}
+body{font-family:'Fira Sans',system-ui,sans-serif;background:var(--ink);color:var(--cream);overflow-x:hidden}
+.screen{display:none;min-height:100vh;min-height:100dvh;padding:24px 20px;flex-direction:column;align-items:center;justify-content:center;text-align:center;animation:fade .4s ease}
+.screen.active{display:flex}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.kicker{font-weight:700;letter-spacing:.18em;font-size:12px;color:#BDB5A8;margin-bottom:14px}
+h1{font-weight:900;font-size:clamp(34px,8vw,68px);line-height:1.02;max-width:760px}
+h1 span{color:#FF9B7A}
+.lead{margin:18px auto 34px;max-width:520px;font-size:clamp(16px,2.4vw,19px);line-height:1.45;color:#D9D1C3}
+.btn{font:900 20px 'Fira Sans',sans-serif;border:0;border-radius:999px;padding:16px 44px;cursor:pointer;background:#E4572E;color:#fff;box-shadow:0 6px 0 #9c3216;transition:transform .12s,box-shadow .12s}
+.btn:active{transform:translateY(4px);box-shadow:0 2px 0 #9c3216}
+.btn.alt{background:transparent;color:var(--cream);box-shadow:inset 0 0 0 2px #6b6258;font-size:15px;padding:11px 24px}
+.btn.alt:active{box-shadow:inset 0 0 0 2px #6b6258}
+h2.t{font-weight:900;font-size:clamp(26px,5vw,40px);margin-bottom:8px}
+.sub{color:#BDB5A8;margin-bottom:26px;font-size:16px}
+.cats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;width:100%;max-width:640px}
+.cat{border:0;border-radius:20px;padding:20px 16px;min-height:150px;text-align:left;cursor:pointer;font-family:inherit;color:var(--on);background:var(--main);position:relative;overflow:hidden;transition:transform .15s}
+.cat:hover{transform:translateY(-4px) rotate(-.6deg)}
+.cat b{display:block;font-weight:900;font-size:clamp(20px,4.4vw,26px);line-height:1.05;position:relative}
+.cat small{display:block;margin-top:8px;font-weight:500;font-size:14px;opacity:.9;position:relative}
+.cat i{position:absolute;right:-18px;bottom:-22px;width:90px;height:90px;border-radius:50%;border:10px solid rgba(255,255,255,.2)}
+.cat .q{position:absolute;right:14px;top:8px;font-weight:900;font-size:44px;opacity:.28}
+.top{width:100%;max-width:420px;display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;gap:10px}
+.cnt{font-weight:700;color:#BDB5A8;font-size:14px}
+.stage{width:100%;max-width:340px;perspective:1000px;margin-bottom:22px}
+.card,.back{width:100%;aspect-ratio:94/135;border-radius:20px;overflow:hidden;border:3px solid var(--main);text-align:left;color:var(--ink);position:relative}
+.back{background:var(--main);color:var(--on);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-weight:900;text-align:center;padding:20px}
+.back::before{content:"";position:absolute;width:75%;aspect-ratio:1;border-radius:50%;border:12px solid rgba(255,255,255,.18)}
+.back::after{content:"";position:absolute;width:45%;aspect-ratio:1;border-radius:50%;background:rgba(255,255,255,.14)}
+.back span{position:relative;z-index:1;font-size:15px;letter-spacing:.14em;font-weight:700}
+.back em{position:relative;z-index:1;font-style:normal;font-size:30px;line-height:1.1;margin-top:8px}
+.card{background:var(--cream);display:flex;flex-direction:column}
+.card.in{animation:flip .55s cubic-bezier(.2,.8,.2,1)}
+@keyframes flip{from{transform:rotateY(90deg) scale(.92);opacity:0}to{transform:none;opacity:1}}
+.head{background:var(--main);color:var(--on);padding:4.5% 7%;display:flex;justify-content:space-between;align-items:center;min-height:18.5%}
+.head small{display:block;font-size:clamp(7px,2.2vw,9px);font-weight:700;letter-spacing:.07em;margin-bottom:3px}
+.head b{font-weight:900;font-size:clamp(13px,4.2vw,17px)}
+.num{text-align:right;font-weight:900;font-size:clamp(26px,8.5vw,38px);line-height:1}
+.num small{font-size:11px;letter-spacing:0;margin:2px 0 0}
+.body{flex:1;padding:6% 7% 3%}
+.body h2{font-weight:900;font-size:clamp(21px,6.6vw,27px);line-height:1.08}
+.bar{display:block;width:16%;height:5px;border-radius:3px;background:var(--main);margin:12px 0}
+.body p{font-weight:500;font-size:clamp(15px,4.6vw,18px);line-height:1.28;color:#3A332B}
+.panel{background:var(--ink);color:#fff;padding:5% 7% 5.5%}
+.pt{display:flex;justify-content:space-between;font-size:11px;color:#BDB5A8;margin-bottom:6px}
+.pt b{color:var(--light);font-weight:900;font-size:14px}
+.row{display:flex;justify-content:space-between;align-items:center;font-weight:500;font-size:clamp(11.5px,3.5vw,13.5px);padding:2.5px 0}
+.row u{text-decoration:none;background:var(--light);color:var(--ink);font-weight:900;border-radius:99px;padding:2px 0;width:50px;text-align:center;font-size:14px}
+.tot{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid var(--light);margin-top:7px;padding-top:6px;font-weight:900}
+.tot span:last-child{color:var(--light);font-size:clamp(22px,7vw,28px)}
+.btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.end{aspect-ratio:94/135;border-radius:20px;border:3px dashed var(--main);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;font-weight:900;font-size:26px;gap:10px;line-height:1.15}
+.end p{font-weight:500;font-size:16px;color:#D9D1C3}
+</style>
+</head>
+<body>
+
+<section class="screen active" id="s-start">
+  <div class="kicker">КАРТОЧНАЯ ИГРА ДЛЯ КОМАНД</div>
+  <h1>Искусство <span>гостиничного</span> сервиса</h1>
+  <p class="lead">Соберите команду, вытяните карточки и решите ситуацию так, чтобы гость остался доволен. Лучшее решение получает до 10 баллов.</p>
+  <button class="btn" id="go">Старт</button>
+</section>
+
+<section class="screen" id="s-cats">
+  <h2 class="t">Выберите категорию</h2>
+  <p class="sub">Карточки скрыты — узнаете, что выпало, когда вытянете.</p>
+  <div class="cats" id="cats"></div>
+</section>
+
+<section class="screen" id="s-game">
+  <div class="top">
+    <button class="btn alt" id="back">← Категории</button>
+    <div class="cnt" id="cnt"></div>
+  </div>
+  <div class="stage" id="stage"></div>
+  <div class="btns" id="btns"></div>
+</section>
+
+<script>
+var CATS = {
+  tourist: {name:"Туристы", label:"КАРТОЧКА ТУРИСТА", main:"#E4572E", light:"#FF9B7A", on:"#fff", items:[
+    ["Деловой путешественник","Нуждается в тихом номере, быстром заселении и хорошем Wi-Fi."],
+    ["Пожилой гость","Нуждается в помощи с багажом и номере рядом с лифтом."],
+    ["Родитель с ребёнком","Просит детскую кроватку и специальное меню."],
+    ["Гость с аллергией","Не употребляет продукты с орехами."],
+    ["Молодая пара","Приехала отметить годовщину и хочет праздничное оформление номера."],
+    ["Иностранный турист","Плохо владеет русским языком и нуждается в помощи с ориентацией в городе."],
+    ["Требовательный гость","Предъявляет высокие требования к чистоте и комфорту."],
+    ["Самостоятельный путешественник","Интересуется недорогими услугами и достопримечательностями."]]},
+  staff: {name:"Персонал", label:"КАРТОЧКА ПЕРСОНАЛА", main:"#0F6B6B", light:"#5FD6CB", on:"#fff", items:[
+    ["Администратор","Заселение, бронирование, решение вопросов гостей."],
+    ["Менеджер по работе с гостями","Обработка жалоб и организация индивидуального обслуживания."],
+    ["Горничная","Уборка номеров, замена белья и полотенец."],
+    ["Официант","Обслуживание в ресторане и приём заказов."],
+    ["Консьерж","Экскурсии, такси и информация о городе."],
+    ["Технический специалист","Устранение неисправностей."],
+    ["Шеф-повар","Приготовление блюд с учётом пищевых ограничений."],
+    ["Коридорный","Помощь с багажом и доставка принадлежностей."]]},
+  situation: {name:"Ситуации", label:"КАРТОЧКА СИТУАЦИИ", main:"#F2A900", light:"#FFD15C", on:"#1F1B16", items:[
+    ["Двойное бронирование","Два гостя претендуют на один и тот же номер."],
+    ["Задержка заселения","Номер не готов к прибытию гостя."],
+    ["Проблема с питанием","В заказанном блюде обнаружен аллерген."],
+    ["Шумные соседи","Постоялец жалуется на громкую музыку из соседнего номера."],
+    ["Неисправность кондиционера","В номере не работает система охлаждения."],
+    ["Потерянный багаж","После заселения гость не может найти свой чемодан."],
+    ["Испорченный праздник","Гостиница забыла подготовить праздничное оформление номера."],
+    ["Языковой барьер","Иностранный гость не понимает объяснений персонала."],
+    ["Некачественная уборка","Гость недоволен чистотой номера."],
+    ["Срочный выезд","Гостю необходимо быстро выселиться и получить документы."]]},
+  twist: {name:"Неожиданный поворот", label:"НЕОЖИДАННЫЙ ПОВОРОТ", main:"#3B1C5A", light:"#C9A8FF", on:"#fff", items:[
+    ["Дефицит персонала","Нужный сотрудник отсутствует."],
+    ["Ограниченное время","На решение проблемы осталось 10 минут."],
+    ["Недовольство гостя","Предложенное решение его не устраивает."],
+    ["Ограниченный бюджет","Дополнительная услуга не может быть предоставлена бесплатно."],
+    ["Ошибка коллеги","Проблема возникла по вине другого сотрудника."]]}
+};
+var CRIT = [["Правильность решения","0–3"],["Учёт потребностей туриста","0–3"],["Распределение обязанностей","0–2"],["Клиентоориентированность","0–2"]];
+
+var $ = function(id){return document.getElementById(id)};
+function show(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});$(id).classList.add('active');window.scrollTo(0,0)}
+
+// Случайность: у каждого устройства своя колода, перемешивается при каждом входе в категорию
+function rnd(n){
+  if(window.crypto&&crypto.getRandomValues){
+    var a=new Uint32Array(1),lim=Math.floor(4294967296/n)*n;
+    do{crypto.getRandomValues(a)}while(a[0]>=lim);
+    return a[0]%n;
+  }
+  return Math.floor(Math.random()*n);
+}
+function shuffle(arr){
+  var a=arr.slice();
+  for(var i=a.length-1;i>0;i--){var j=rnd(i+1),t=a[i];a[i]=a[j];a[j]=t}
+  return a;
+}
+
+var cur=null,deck=[],pos=0;
+
+function setTheme(c){
+  var r=document.documentElement.style;
+  r.setProperty('--main',c.main);r.setProperty('--light',c.light);r.setProperty('--on',c.on);
+}
+
+// экран категорий (карточки скрыты)
+var catsEl=$('cats');
+Object.keys(CATS).forEach(function(k){
+  var c=CATS[k],b=document.createElement('button');
+  b.className='cat';b.style.background=c.main;b.style.color=c.on;
+  b.innerHTML='<span class="q">?</span><b>'+c.name+'</b><small>'+c.items.length+' карточек</small><i></i>';
+  b.onclick=function(){openCat(k)};
+  catsEl.appendChild(b);
+});
+
+function openCat(k){
+  cur=CATS[k];setTheme(cur);
+  deck=shuffle(cur.items);pos=0;
+  renderBack();show('s-game');
+}
+
+function renderBack(){
+  $('cnt').textContent='Вытянуто: '+pos+' из '+deck.length;
+  $('stage').innerHTML='<div class="back" id="bk"><span>'+cur.label+'</span><em>Нажмите,<br>чтобы вытянуть</em></div>';
+  $('bk').onclick=draw;
+  $('btns').innerHTML='<button class="btn" id="dr">Вытянуть карточку</button>';
+  $('dr').onclick=draw;
+}
+
+function draw(){
+  if(pos>=deck.length){return finish()}
+  var it=deck[pos];pos++;
+  var rows=CRIT.map(function(r){return '<div class="row"><span>'+r[0]+'</span><u>'+r[1]+'</u></div>'}).join('');
+  $('stage').innerHTML=
+   '<div class="card in"><div class="head"><div><small>ИСКУССТВО ГОСТИНИЧНОГО СЕРВИСА</small><b>'+cur.label+'</b></div>'+
+   '<div class="num">'+pos+'<small>из '+deck.length+'</small></div></div>'+
+   '<div class="body"><h2>'+it[0]+'</h2><i class="bar"></i><p>'+it[1]+'</p></div>'+
+   '<div class="panel"><div class="pt"><b>БАЛЛЫ</b><span>за решение команды</span></div>'+rows+
+   '<div class="tot"><span>ИТОГО</span><span>10 баллов</span></div></div></div>';
+  $('cnt').textContent='Вытянуто: '+pos+' из '+deck.length;
+  $('btns').innerHTML='<button class="btn" id="nx">'+(pos>=deck.length?'Завершить':'Следующая карточка')+'</button>';
+  $('nx').onclick=draw;
+}
+
+function finish(){
+  $('stage').innerHTML='<div class="end">Все карточки вытянуты<p>Перемешайте колоду, чтобы сыграть ещё раз в другом порядке.</p></div>';
+  $('cnt').textContent='Вытянуто: '+deck.length+' из '+deck.length;
+  $('btns').innerHTML='<button class="btn" id="rs">Перемешать заново</button>';
+  $('rs').onclick=function(){deck=shuffle(cur.items);pos=0;renderBack()};
+}
+
+$('go').onclick=function(){show('s-cats')};
+$('back').onclick=function(){show('s-cats')};
+</script>
+</body>
+</html>
